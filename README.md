@@ -6,16 +6,16 @@
 
 ## 要如何配置
 
-你需要根据你的需要修改 `config.sh` 的钱几行
+你需要根据你的需要修改 `config.sh`
 
 ```
-export RANGAPASS='ranga'
+# 你的第一个账户、密码
+USER_MAIN='178aaaaaaaa'
+PASS_MAIN='123123'
 
-USER_MAIN=178aaaaaaaa  # 你的第一个账户
-PASS_MAIN=123123       # 你的第一个账户的密码
-
-USE_MULTI_HOMING='1'   # 如果不使用多宿主，应设置为 0,且清空下面的数组
-# 这个数组包含多宿主的账户，每一行一个，账户和密码用空格分割，需要几个写几行
+# 如果不使用多宿主，应设置为 0
+USE_MULTI_HOMING='1'
+# 如果使用多宿主，则这个数组包含多宿主的账户，每一行一个，账户和密码用空格分割，需要几个写几行
 USERS_EXTRA=( \
 	'178xxxxxxxx 123123' \
 	'178yyyyyyyy 123123' \
@@ -25,21 +25,37 @@ USERS_EXTRA=( \
 # Wifi 的 SSID 和 Key
 WIFI_SSID="Ranga Easy-config"
 WIFI_KEY="password"
-WIFI_ADD_HZ_SUFFIX=1   # 如果不希望添加频率后戳，应设置为 0
+# 如果不希望添加频率后戳，应设置为 0
+WIFI_ADD_HZ_SUFFIX=1
+
+# 设置无线电监管域，留空不修改
+WIFI_SET_REG_DOMAIN='TW'
+
+# 是否启用流量卸载
+MISC_OFFLOAD=1
+
+# 是否开机自动启动计划任务服务
+MISC_CRON_AUTOSTART=0
+
+# 是否启用实验性新型拦截法
+MISC_NEW_EXP_CATCHING=1
+
+# 修改超级密码，留空不修改
+SUPER_PASSWD=''
+
+# 如果要安装一系列扩展程序，请将它们列在此处
+# INSTALL_EXT_LIST=( \
+# 	'/path/to/xxx.zip' \
+# 	'/path/to/yyy.zip' \
+# )
+INSTALL_EXT_LIST=()
+
+# 是否启用 QoS，留空不启用，否则为 QoS 规则文件路径
+QOS_RULE_FILE=''
 ```
 
-脚本还进行了一些其他配置，你可以进行修改以满足你的个性需要
+运行 `./initsystem.sh` 开始配置系统，不可重复运行
 
-如果需要最后修改密码，则可以添加
-
-```
-ranga-cli config misc set-passwd '新密码'
-```
-
-如果需要启用联发科的驱动程序
-
-```
-ranga-cli config mtk set-mode ....
-```
+另外，如果需要执行自定义命令，你应该写入 `preuser.sh` 和 `postuser.sh` 以避免污染主要脚本。
 
 请参考手册，你需要的一切这里都有： https://glider0.github.io/doc.zh/euman.html

@@ -1,65 +1,47 @@
-#!/bin/bash
+#!/usr/bin/env false
 
 export RANGAPASS='ranga'
 
-USER_MAIN=178aaaaaaaa
-PASS_MAIN=123123
+# 你的第一个账户、密码
+USER_MAIN='178aaaaaaaa'
+PASS_MAIN='123123'
 
+# 如果不使用多宿主，应设置为 0
 USE_MULTI_HOMING='1'
+# 如果使用多宿主，则这个数组包含多宿主的账户，每一行一个，账户和密码用空格分割，需要几个写几行
 USERS_EXTRA=( \
 	'178xxxxxxxx 123123' \
 	'178yyyyyyyy 123123' \
 	'178zzzzzzzz 123123' \
 )
 
+# Wifi 的 SSID 和 Key
 WIFI_SSID="Ranga Easy-config"
 WIFI_KEY="password"
+# 如果不希望添加频率后戳，应设置为 0
 WIFI_ADD_HZ_SUFFIX=1
 
-ranga-cli auth -e
+# 设置无线电监管域，留空不修改
+WIFI_SET_REG_DOMAIN='TW'
 
-echo "=> config user '$USER_MAIN' with passwd '$PASS_MAIN' to if 'netkeeper'"
-ranga-cli config interface set netkeeper usrnam "$USER_MAIN"
-ranga-cli config interface set netkeeper passwd "$PASS_MAIN"
+# 是否启用流量卸载
+MISC_OFFLOAD=1
 
-if [ "$USE_MULTI_HOMING" = '1' ]; then
-	echo "=> enable multiple homing"
-	ranga-cli config mwan enable
-fi
+# 是否开机自动启动计划任务服务
+MISC_CRON_AUTOSTART=0
 
-w='97'
-nrvlan='0'
-for i in "${USERS_EXTRA[@]}"; do
-	tmp=`printf %x "$w"`
-	alpha=`printf "\x$tmp"`
-	if="md$alpha"
-	w=$(($w + 1))
+# 是否启用实验性新型拦截法
+MISC_NEW_EXP_CATCHING=1
 
-	user="${i% *}"
-	pass="${i#* }"
+# 修改超级密码，留空不修改
+SUPER_PASSWD=''
 
-	echo "=> config user '$user' with passwd '$pass' to if '$if'"
-	echo "   rvlan ID: $nrvlan"
-	ranga-cli config interface add "$if"
-	ranga-cli config interface set "$if" type pppoe
-	ranga-cli config interface set "$if" nkplugin on
-	ranga-cli config interface set "$if" usrnam "$user"
-	ranga-cli config interface set "$if" passwd "$pass"
-	ranga-cli config interface set "$if" rvlan "$nrvlan"
-	ranga-cli config mwan add "$if"
+# 如果要安装一系列扩展程序，请将它们列在此处
+# INSTALL_EXT_LIST=( \
+# 	'/path/to/xxx.zip' \
+# 	'/path/to/yyy.zip' \
+# )
+INSTALL_EXT_LIST=()
 
-	nrvlan=$(($nrvlan + 1))
-done
-
-echo "=> config wifi to ssid:'$WIFI_SSID' key'$WIFI_KEY' suffix:'$WIFI_ADD_HZ_SUFFIX'"
-ranga-cli config wifi auto "$WIFI_SSID" "$WIFI_KEY" "$WIFI_ADD_HZ_SUFFIX"
-ranga-cli action restart wireless
-
-echo "=> misc configs"
-ranga-cli config misc set-flag enable_forever_nkserver 1
-ranga-cli config misc set-misc rvlan "$nrvlan"
-ranga-cli config svc offload enable
-
-ranga-cli addon set-webcon ranga.webcon
-
-echo "NOTE: you may need reboot to make some config taken effect!"
+# 是否启用 QoS，留空不启用，否则为 QoS 规则文件路径
+QOS_RULE_FILE=''

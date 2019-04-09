@@ -88,4 +88,9 @@ done
 
 . postuser.sh
 
-echo "NOTE: you may need reboot to make some config taken effect!"
+if [ "$REBOOT_IMMEDIATELY" = '1' ]; then
+	echo "=> rebooting..."
+	ranga-cli action restart system
+else
+	echo "Warning: you may need reboot to make some config taken effect!"
+fi

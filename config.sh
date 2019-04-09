@@ -45,3 +45,6 @@ INSTALL_EXT_LIST=()
 
 # 是否启用 QoS，留空不启用，否则为 QoS 规则文件路径
 QOS_RULE_FILE=''
+
+# 如果不希望立即重启，应设置为 0
+REBOOT_IMMEDIATELY=1

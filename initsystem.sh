@@ -13,6 +13,8 @@ if [ "$USE_MULTI_HOMING" = '1' ]; then
 	echo "=> enable multiple homing"
 	ranga-cli config mwan enable
 
+	ranga-cli config mwan add netkeeper
+
 	w='97'
 	nrvlan='0'
 	for i in "${USERS_EXTRA[@]}"; do

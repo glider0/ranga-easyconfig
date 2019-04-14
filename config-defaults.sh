@@ -46,5 +46,20 @@ INSTALL_EXT_LIST=()
 # 是否启用 QoS，留空不启用，否则为 QoS 规则文件路径
 QOS_RULE_FILE=''
 
+# 是否启用 aria2 “额外（可选）服务”，如果系统支持
+OPT_SVC_ARIA2=1
+# aria2 “额外（可选）服务”修改密码，留空保持默认密码
+OPT_SVC_ARIA2_CH_RPC_SECRET=''
+# 是否启用 samba “额外（可选）服务”，如果系统支持
+OPT_SVC_SAMBA=1
+# samba “额外（可选）服务”修改密码
+OPT_SVC_SAMBA_USER_TOKEN='123456'
+
+# 非空设置 MT7620 平台的专有驱动程序，且会导致系统重启
+# linux-wireless-only
+# rt2860-mtk-with-any5ghz-linux-wireless
+# rt2860-mtk-with-mt7612e-mtk
+SOC_MT7620_RADIO_DRIVER=''
+
 # 如果不希望立即重启，应设置为 0
 REBOOT_IMMEDIATELY=1

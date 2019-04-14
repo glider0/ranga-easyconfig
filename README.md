@@ -6,9 +6,13 @@
 
 ## 要如何配置
 
-你需要根据你的需要修改 `config.sh`
+复制 `config-defaults.sh` 到 `config-my.sh` 并进行你需要根据你的需要修改，当然，你也可以直接修改 `config-defaults.sh`，但不推荐。
 
 ```
+#!/usr/bin/env false
+
+export RANGAPASS='ranga'
+
 # 你的第一个账户、密码
 USER_MAIN='178aaaaaaaa'
 PASS_MAIN='123123'
@@ -52,9 +56,27 @@ INSTALL_EXT_LIST=()
 
 # 是否启用 QoS，留空不启用，否则为 QoS 规则文件路径
 QOS_RULE_FILE=''
+
+# 是否启用 aria2 “额外（可选）服务”，如果系统支持
+OPT_SVC_ARIA2=1
+# aria2 “额外（可选）服务”修改密码，留空保持默认密码
+OPT_SVC_ARIA2_CH_RPC_SECRET=''
+# 是否启用 samba “额外（可选）服务”，如果系统支持
+OPT_SVC_SAMBA=1
+# samba “额外（可选）服务”修改密码
+OPT_SVC_SAMBA_USER_TOKEN='123456'
+
+# 非空设置 MT7620 平台的专有驱动程序，且会导致系统重启
+# linux-wireless-only
+# rt2860-mtk-with-any5ghz-linux-wireless
+# rt2860-mtk-with-mt7612e-mtk
+SOC_MT7620_RADIO_DRIVER=''
+
+# 如果不希望立即重启，应设置为 0
+REBOOT_IMMEDIATELY=1
 ```
 
-运行 `./initsystem.sh` 开始配置系统，不可重复运行
+更新完整包系统后，不要在 Web 控制台上进行任何操作，运行 `./initsystem.sh` 开始配置系统，不可重复运行
 
 另外，如果需要执行自定义命令，你应该写入 `preuser.sh` 和 `postuser.sh` 以避免污染主要脚本。
 

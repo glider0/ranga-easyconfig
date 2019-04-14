@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-. config.sh
+. config-defaults.sh
+[ -f config-my.sh ] . config-my.sh
 . preuser.sh
 
 ranga-cli auth -e
@@ -88,11 +89,35 @@ done
 	ranga-cli config --raw qos < "$QOS_RULE_FILE"
 }
 
+[ "$OPT_SVC_ARIA2" = '1' ] && {
+	echo "=> enable opt server 'aria2'"
+	ranga-cli action opt enable aria2
+	[ -n "$OPT_SVC_ARIA2_CH_PASS" ] && {
+		echo "   change aria2_rpc_secret"
+		ranga-cli config misc set-misc aria2_rpc_secret "$OPT_SVC_ARIA2_CH_RPC_SECRET"
+	}
+}
+
+[ "$OPT_SVC_SAMBA" = '1' ] && {
+	echo "=> enable opt server 'samba'"
+	ranga-cli action opt enable samba
+	echo "   change samba user token"
+	ranga-cli action opt action samba set-passwd "$OPT_SVC_SAMBA_USER_TOKEN"
+}
+
 . postuser.sh
 
-if [ "$REBOOT_IMMEDIATELY" = '1' ]; then
-	echo "=> rebooting..."
-	ranga-cli action restart system
-else
-	echo "Warning: you may need reboot to make some config taken effect!"
+tryreboot='1'
+if [ -n "$SOC_MT7620_RADIO_DRIVER" ]; then
+	ranga-cli config mtk set-mode "$SOC_MT7620_RADIO_DRIVER"
+	[ "$?" = "0" ] && tryreboot='0'
 fi
+
+[ "$tryreboot" = '1' ] && {
+	if [ "$REBOOT_IMMEDIATELY" = '1' ]; then
+		echo "=> rebooting..."
+		ranga-cli action restart system
+	else
+		echo "Warning: you may need reboot to make some config taken effect!"
+	fi
+}

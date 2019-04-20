@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 . config-defaults.sh
-[ -f config-my.sh ] . config-my.sh
+[ -f config-my.sh ] && . config-my.sh
 . preuser.sh
 
 ranga-cli auth -e
@@ -33,7 +33,7 @@ if [ "$USE_MULTI_HOMING" = '1' ]; then
 		echo "   rvlan ID: $nrvlan"
 		ranga-cli config interface add "$if"
 		ranga-cli config interface set "$if" type pppoe
-		ranga-cli config interface set "$if" nkplugin on
+		ranga-cli config interface set "$if" nkplugin nkplugin
 		ranga-cli config interface set "$if" usrnam "$user"
 		ranga-cli config interface set "$if" passwd "$pass"
 		ranga-cli config interface set "$if" rvlan "$nrvlan"

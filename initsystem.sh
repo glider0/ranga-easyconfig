@@ -1,14 +1,20 @@
 #!/usr/bin/env bash
 
-. config-defaults.sh
-[ -f config-my.sh ] && . config-my.sh
+. config-main.sh
+. config-seth.sh
+. config-opt.sh
+[ -f config-user.sh ] && . config-user.sh
 . preuser.sh
 
 ranga-cli auth -e
 
+nkplugin='nkplugin'
+[ "$SETH_ENABLE" = '1' ] && nkplugin='seth'
+
 echo "=> config user '$USER_MAIN' with passwd '$PASS_MAIN' to if 'netkeeper'"
 ranga-cli config interface set netkeeper usrnam "$USER_MAIN"
 ranga-cli config interface set netkeeper passwd "$PASS_MAIN"
+ranga-cli config interface set netkeeper nkplugin "$nkplugin"
 
 if [ "$USE_MULTI_HOMING" = '1' ]; then
 	echo "=> enable multiple homing"
@@ -33,7 +39,7 @@ if [ "$USE_MULTI_HOMING" = '1' ]; then
 		echo "   rvlan ID: $nrvlan"
 		ranga-cli config interface add "$if"
 		ranga-cli config interface set "$if" type pppoe
-		ranga-cli config interface set "$if" nkplugin nkplugin
+		ranga-cli config interface set "$if" nkplugin "$nkplugin"
 		ranga-cli config interface set "$if" usrnam "$user"
 		ranga-cli config interface set "$if" passwd "$pass"
 		ranga-cli config interface set "$if" rvlan "$nrvlan"
@@ -103,6 +109,23 @@ done
 	ranga-cli action opt enable samba
 	echo "   change samba user token"
 	ranga-cli action opt action samba set-passwd "$OPT_SVC_SAMBA_USER_TOKEN"
+}
+
+[ "$SETH_ENABLE" = '1' ] && {
+	echo "=> config seth service"
+	for i in "${SETH_ADD_USER[@]}"; do
+		user="${i% *}"
+		secret="${i#* }"
+		ranga-cli action seth add "$user" "$secret"
+	done
+
+	[ "$SETH_CRON_ADD" = '1' ] && {
+		echo "=> config seth cron"
+		ranga-cli config misc set-flag enable_cron_autostart 1
+		[ -z "$SETH_CRON_TIME_M" ] && SETH_CRON_TIME_M=$(( $RANDOM % 60 ))
+		echo "   seth will sync at ${SETH_CRON_TIME_H}:${SETH_CRON_TIME_M}"
+		ranga-cli config cron add 'ranga.seth.helper' 'sync' '' "$SETH_CRON_TIME_M" "$SETH_CRON_TIME_H" '*' '*' '*'
+	}
 }
 
 . postuser.sh

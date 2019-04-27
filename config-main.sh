@@ -7,7 +7,7 @@ USER_MAIN='178aaaaaaaa'
 PASS_MAIN='123123'
 
 # 如果不使用多宿主，应设置为 0
-USE_MULTI_HOMING='1'
+USE_MULTI_HOMING=1
 # 如果使用多宿主，则这个数组包含多宿主的账户，每一行一个，账户和密码用空格分割，需要几个写几行
 USERS_EXTRA=( \
 	'178xxxxxxxx 123123' \
@@ -27,7 +27,7 @@ WIFI_SET_REG_DOMAIN='TW'
 # 是否启用流量卸载
 MISC_OFFLOAD=1
 
-# 是否开机自动启动计划任务服务
+# 是否开机自动启动计划任务服务，若启用 Seth 服务且启用自动同步，此设置将忽略并开启开机自动启动计划任务服务
 MISC_CRON_AUTOSTART=0
 
 # 是否启用实验性新型拦截法
@@ -45,15 +45,6 @@ INSTALL_EXT_LIST=()
 
 # 是否启用 QoS，留空不启用，否则为 QoS 规则文件路径
 QOS_RULE_FILE=''
-
-# 是否启用 aria2 “额外（可选）服务”，如果系统支持
-OPT_SVC_ARIA2=1
-# aria2 “额外（可选）服务”修改密码，留空保持默认密码
-OPT_SVC_ARIA2_CH_RPC_SECRET=''
-# 是否启用 samba “额外（可选）服务”，如果系统支持
-OPT_SVC_SAMBA=1
-# samba “额外（可选）服务”修改密码
-OPT_SVC_SAMBA_USER_TOKEN='123456'
 
 # 非空设置 MT7620 平台的专有驱动程序，且会导致系统重启
 # linux-wireless-only

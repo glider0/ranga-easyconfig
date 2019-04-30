@@ -9,7 +9,7 @@
 ranga-cli auth -e
 
 nkplugin='nkplugin'
-[ "$SETH_ENABLE" = '1' ] && nkplugin='seth'
+[ "$SETH_ENABLE" = 'disable' ] || nkplugin='seth'
 
 echo "=> config user '$USER_MAIN' with passwd '$PASS_MAIN' to if 'netkeeper'"
 ranga-cli config interface set netkeeper usrnam "$USER_MAIN"
@@ -111,13 +111,15 @@ done
 	ranga-cli action opt action samba set-passwd "$OPT_SVC_SAMBA_USER_TOKEN"
 }
 
-[ "$SETH_ENABLE" = '1' ] && {
-	echo "=> config seth service"
-	for i in "${SETH_ADD_USER[@]}"; do
-		user="${i% *}"
-		secret="${i#* }"
-		ranga-cli action seth add "$user" "$secret"
-	done
+[ "$SETH_ENABLE" = 'disable' ] || {
+	[ "$SETH_ENABLE" = 'enable' ] && {
+		echo "=> config seth service"
+		for i in "${SETH_ADD_USER[@]}"; do
+			user="${i% *}"
+			secret="${i#* }"
+			ranga-cli action seth add "$user" "$secret"
+		done
+	}
 
 	[ "$SETH_CRON_ADD" = '1' ] && {
 		echo "=> config seth cron"
